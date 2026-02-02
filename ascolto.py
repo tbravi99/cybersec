@@ -5,21 +5,25 @@ port = 6364
 server_socket.bind((host, port))
 server_socket.listen(1)
 f = open("logFile.txt", "w")
-f.write(f"Connected by {addr}\n")
-try:
-    while True:
-        data = conn.recv(1024)
-        in not data:
-            break
-        richiesta = data.decode(
-        if richiesta == "SHUTDOWN":
-            break
-        risposta = f"Ho ricevuto il tuo messaggio: {richiesta}\n"
-        f.write(risposta)
-        conn.sendall(risposta.encode())
-    if richiesta == "SHUTDOWN":
-            break
-finally:
-    conn.close()
+print(f"Server listening on {host}:{port}")
+for i in range(100):
+    conn, addr = server_socket.accept()
+    f.write(f"Connected by {addr}\n")
+    richiesta = "SHUTDOWN"
+    try:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            else:
+                richiesta = data.decode()
+                if richiesta == "SHUTDOWN":
+                    break
+                else:
+                    risposta = f"Ho ricevuto il tuo messaggio: {richiesta}\n"
+                    f.write(risposta)
+                conn.sendall(risposta.encode())
+    finally:
+        conn.close()
 f.close()
 server_socket.close()
