@@ -1,13 +1,15 @@
-#SI FA PARTIRE PER SECONDO
 import socket
-import sys
-messaggio = sys.argv[1]
 s = socket.socket()
-s.settimeout(20)
 indirizzo = '127.0.0.1' #QUI VA MESSO L'IP DEL COMPAGNO
-porta = 6364
+porta = 7654
 s.connect((indirizzo, porta))
-s.sendall(messaggio.encode())
-risposta = s.recv(1024)
-print(risposta.decode())
+prompt = s.recv(1024)
+username = input(prompt.decode())
+s.sendall(username.encode()) #per inviare lo username ad ascolto0.py
+prompt = s.recv(1024)
+password = input(prompt.decode())
+s.sendall(password.encode())
+if username == 'admin':
+    prompt=s.recv(1024)
+    print(prompt.decode())
 s.close()
